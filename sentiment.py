@@ -1,13 +1,5 @@
-import requests
+from nltk.corpus import twitter_samples
 
-headers = {'content-type': 'application/json'}
+path = twitter_samples.abspath("tweets.20150430-223406.json")
 
-data = {
-    'text': ':('
-}
-
-url = 'http://text-processing.com/api/sentiment/'
-
-r = requests.post(url, data=data, headers=headers)
-
-print(r.json())
+print(path)
