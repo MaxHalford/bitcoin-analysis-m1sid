@@ -1,26 +1,33 @@
+import Quandl
+import seaborn
+import matplotlib.pyplot as plt
+
 NONCE = pow(2, 32)
 
+difficultes = Quandl.get('BCHAIN/DIFF', authtoken='ri21BpjKtw3SVkCYWpKw',
+                         collapse='daily')
 
-def hashes_per_day(difficulty, hashrate):
+
+def bitcoins_par_jour(difficulte, hashrate):
     '''
-    Returns the average number of hashes found in one day.
+    Retourne le nombre de bitcoins trouvés en moyenne pour un jour.
 
-    - difficulty: provided by the system
-    - hashrate: hashes per second
+    - difficulte: imposée par le système
+    - hashrate: dépend de la machine utilisée
     '''
-    return 24 / (difficulty * NONCE / hashrate / 3600)
+    return 24 / (difficulte * NONCE / hashrate / 3600)
 
 
-def power_cost_per_day(consumption, price):
+def cout_par_jour(consommation, prix):
     '''
-    Return the electricity cost per day.
+    Retourne le cout en electricité.
 
-    - consumption: electricity consumption per hour
-    - rate: electricity price per hour
+    - consommation: consommation en kilowatt/heure
+    - prix: prix du kilowatt/heure
     '''
-    return 24 * consumption * price
+    return 24 * consommation * prix
 
-difficulty = 20000
+difficulte = 20000
 hashrate = pow(10, 9)
 
-print(hashes_per_day(difficulty, hashrate))
+print(bitcoins_par_jour(difficulte, hashrate))
