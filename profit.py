@@ -13,7 +13,7 @@ def bitcoins_par_jour(difficulte, hashrate):
     Retourne le nombre de bitcoins trouvés en moyenne pour un jour.
 
     - difficulte: imposée par le système
-    - hashrate: dépend de la machine utilisée
+    - hashrate: en hashs par seconde
     '''
     return 24 / (difficulte * NONCE / hashrate / 3600)
 
@@ -28,6 +28,7 @@ def cout_par_jour(consommation, prix):
     return 24 * consommation * prix
 
 difficulte = 20000
-hashrate = pow(10, 9)
+hashrate = 7722000 * 1000000
+watts = 3436
 
-print(bitcoins_par_jour(difficulte, hashrate))
+difficultes['bitcoins'] = bitcoins_par_jour(difficultes['Value'], hashrate)
