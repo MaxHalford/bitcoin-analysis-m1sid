@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import dates as mdates
 import Quandl
+import seaborn
 
 # Récupération des tweets positifs
 dfp = pd.read_csv('data/timestamps/positifs.txt', header=None, index_col=0)
@@ -48,25 +49,84 @@ common['ratio'] = 0
 common['ratio'] = np.round(
     common['positif'] / (common['positif'] + common['negatif']), 2)
 
-common.to_csv('data.csv')
+common.to_csv('common_daily.csv')
 
-# Affichage du graphique
-fig, ax1 = plt.subplots()
+# Cours du bitcoin suivant le ratio
 
-t = common.cours
-s1 = common.index
-ax1.plot(s1, t, 'b-')
-# ax1.axis.set_major_formatter(mdates.DateFormatter('%Y/%d/%m'))
-ax1.set_xlabel('date')
-# Make the y-axis label and tick labels match the line color.
-ax1.set_ylabel('bitcoin', color='b')
-for tl in ax1.get_yticklabels():
-    tl.set_color('b')
+plt.figure()
+ax = common.plot(secondary_y=['positif', 'negatif'],
+                 title="Évolution du bitcoin de 2009 à aujourd'hui")
+plt.show()
 
-ax2 = ax1.twinx()
-s2 = common.ratio
-ax2.plot(s2, t, 'r-')
-ax2.set_ylabel('ratio pos/neg', color='r')
-for tl in ax2.get_yticklabels():
-    tl.set_color('r')
+
+# Est-ce que quand le ratio tweets +/- augmente, implique que dans un
+# espace de temps variable futur que le cours du bitcoin augmente ?
+
+# On effectue une corrélation de rang décalée
+
+# Sens ratio-cours
+def corr_ratio_cours(scale=1):
+    common.cours = common.cours.shift(scale)
+    corr_rang = common['ratio'].corr(common['cours'], method='spearman')
+    return corr_rang
+
+pd.Series([corr_ratio_cours(scale=i)
+           for i in range(30)]).plot(title="ratio => cours (par jour)", ylim=(0, 1))
+plt.show()
+
+# Sens cours-ratio
+
+
+def corr_cours_ratio(scale=1):
+    common.cours = common.cours.shift(scale)
+    corr_rang = common['cours'].corr(common['ratio'], method='spearman')
+    return corr_rang
+
+pd.Series([corr_cours_ratio(scale=i)
+           for i in range(30)]).plot(title="cours => ratio (par jour)", ylim=(0, 1))
+plt.show()
+
+# Il semblerait qu'il faille étudier davantage la corrélation par semaine
+# entre le cours du bitcoin et le ratio de tweets positifs / tweets totaux
+
+# Cours du bitcoin
+value = Quandl.get('BCHAIN/MKPRU', authtoken='ri21BpjKtw3SVkCYWpKw',
+                   collapse='weekly')
+value.index = pd.to_datetime(value.index, unit='ms')
+
+# Mise en commun
+keys = ['positif', 'negatif', 'cours']
+common = pd.concat([dfp, dfn, value], axis=1, keys=keys)
+common['cours'] = np.round(common['cours'], 2)
+
+# On renomme les colonnes
+common.columns = keys
+# Création d'un ratio pour les tweets, positifs/total
+common['ratio'] = 0
+common['ratio'] = np.round(
+    common['positif'] / (common['positif'] + common['negatif']), 2)
+
+
+common.to_csv('common_weekly.csv')
+
+
+# Sens ratio-cours
+def corr_ratio_cours(scale=1):
+    common.cours = common.cours.shift(scale)
+    corr_rang = common['ratio'].corr(common['cours'], method='spearman')
+    return corr_rang
+
+pd.Series([corr_ratio_cours(scale=i)
+           for i in range(14)]).plot(title="ratio => cours (par semaine)", ylim=(0, 1))
+plt.show()
+
+
+# Sens cours-ratio
+def corr_cours_ratio(scale=1):
+    common.cours = common.cours.shift(scale)
+    corr_rang = common['cours'].corr(common['ratio'], method='spearman')
+    return corr_rang
+
+pd.Series([corr_cours_ratio(scale=i)
+           for i in range(14)]).plot(title="cours => ratio (par semaine)", ylim=(0, 1))
 plt.show()
