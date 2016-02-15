@@ -7,7 +7,7 @@ import numpy as np
 import tweet_time
 
 datasets = ['common_daily', 'common_weekly']
-dataframe = pd.read_csv('data/{}'.format(random.choice(datasets)))
+dataframe = pd.read_csv('data/{}.csv'.format(random.choice(datasets)))
 
 
 random = random.randint(0, len(dataframe.index))
