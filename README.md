@@ -8,11 +8,11 @@
 
 
 ## `py.test`
-```python
+```sh
 py.test --verbose
 ```
 
 ## `nosetests`
-```python
+```sh
 nosetests -v test_functions.py
 ```
