@@ -6,9 +6,13 @@
 
 # Tests
 
-```Python
-# Lint code, ignoring tab/space battlefield
-pep8 --ignore=W191,E101,E113 *.py
-# Run tests
+
+## `py.test`
+```sh
 py.test --verbose
+```
+
+## `nosetests`
+```sh
+nosetests -v test_functions.py
 ```

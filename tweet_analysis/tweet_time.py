@@ -6,7 +6,7 @@ import Quandl
 import seaborn
 
 # Récupération des tweets positifs
-dfp = pd.read_csv('data/tweets/timestamps/positifs.txt',
+dfp = pd.read_csv('data/timestamps/positifs.txt',
                   header=None, index_col=0)
 dfp['value'] = 1
 # Conversion de l'index en datetime
@@ -21,7 +21,7 @@ dfp.index = pd.to_datetime(dfp.index, unit='ms')
 
 
 # Récupération des tweets négatifs
-dfn = pd.read_csv('data/tweets/timestamps/negatifs.txt',
+dfn = pd.read_csv('data/timestamps/negatifs.txt',
                   header=None, index_col=0)
 dfn['value'] = 1
 # Conversion de l'index en datetime
