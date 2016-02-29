@@ -1,6 +1,6 @@
 tweets/*
 *.pyc
 *.db
-.cache
+.cache/
 __pycache__
 tweet_analysis/wordclouds/*
