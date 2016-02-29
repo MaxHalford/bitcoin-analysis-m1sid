@@ -6,7 +6,7 @@ import Quandl
 import seaborn
 
 # Récupération des tweets positifs
-dfp = pd.read_csv('../data/tweets/timestamps/positifs.txt',
+dfp = pd.read_csv('data/tweets/timestamps/positifs.txt',
                   header=None, index_col=0)
 dfp['value'] = 1
 # Conversion de l'index en datetime
@@ -21,7 +21,7 @@ dfp.index = pd.to_datetime(dfp.index, unit='ms')
 
 
 # Récupération des tweets négatifs
-dfn = pd.read_csv('../data/tweets/timestamps/negatifs.txt',
+dfn = pd.read_csv('data/tweets/timestamps/negatifs.txt',
                   header=None, index_col=0)
 dfn['value'] = 1
 # Conversion de l'index en datetime
@@ -60,14 +60,17 @@ def compute_ratio(df):
     df['ratio'] = np.nan_to_num(df['ratio'])
     return df
 
-common['ratio'] = 0
 common = compute_ratio(common)
 
-common.to_csv('../data/common_daily.csv')
+common.to_csv('data/common_daily.csv')
 
 # Visualisation du ratio
 common.loc[:, ['ratio']].plot(kind='line',
                               title="Évolution du ratio de tweets positifs liés à \"bitcoin\" de 2009 à aujourd'hui")
+# plt.show()
+
+common.loc[:, ['cours']].plot(kind='line',
+                              title="Cours")
 # plt.show()
 
 # Cours du bitcoin suivant le ratio
@@ -127,7 +130,7 @@ common.columns = keys
 # Création d'un ratio pour les tweets, positifs/total
 common = compute_ratio(common)
 
-common.to_csv('../data/common_weekly.csv')
+common.to_csv('data/common_weekly.csv')
 
 
 # Sens ratio-cours

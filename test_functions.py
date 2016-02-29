@@ -4,7 +4,7 @@ import random
 
 import pandas as pd
 import numpy as np
-import tweet_time
+from tweet_analysis import tweet_time
 
 datasets = ['common_daily', 'common_weekly']
 dataframe = pd.read_csv('data/{}.csv'.format(random.choice(datasets)))

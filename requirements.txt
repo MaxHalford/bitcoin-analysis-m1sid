@@ -2,3 +2,9 @@ pandas
 Quandl
 seaborn
 sqlalchemy
+unittest
+sure
+random
+bs4
+scipy
+git+git://github.com/amueller/word_cloud.git
