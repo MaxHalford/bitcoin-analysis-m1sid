@@ -3,6 +3,6 @@ quandl
 seaborn
 sqlalchemy
 sure
-bs4
+beautifulsoup4
 scipy
 git+git://github.com/amueller/word_cloud.git
