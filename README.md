@@ -4,6 +4,10 @@
 - Alexis Conan
 - Max Halford
 
+
+![Wordclouds](http://i.imgur.com/oWL4zMJ.png)
+
+
 # Tests
 
 
