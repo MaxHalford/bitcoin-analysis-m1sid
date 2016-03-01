@@ -14,5 +14,5 @@ install:
   - conda info -a
   - conda create -n test-environment scipy
   - source activate test-environment
-  - pip install requirements.txt
+  - pip install -r requirements.txt
 script: nosetests test_functions.py
