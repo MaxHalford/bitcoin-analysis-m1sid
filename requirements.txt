@@ -4,5 +4,5 @@ seaborn
 sqlalchemy
 sure
 beautifulsoup4
-nosetests
+nose
 git+git://github.com/amueller/word_cloud.git
