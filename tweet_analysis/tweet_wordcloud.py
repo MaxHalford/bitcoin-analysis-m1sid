@@ -13,7 +13,7 @@ def read_year_tweets(tweet_type, year):
     '''
     fname = "../data/text/{0}/{1}.txt".format(tweet_type, year)
     if os.path.isfile(fname):
-        with open("../data/text/{0}/{1}.txt".format(tweet_type, year), 'r') as content_file:
+        with open(fname, 'r') as content_file:
             content = content_file.read()
         return content
     else:
