@@ -12,6 +12,7 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda install -c conda conda-env
   - conda info -a
-  - conda create -n test-environment --file requirements.txt
+  - conda create -n test-environment scipy
   - source activate test-environment
+  - pip install requirements.txt
 script: nosetests test_functions.py
