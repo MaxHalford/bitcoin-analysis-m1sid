@@ -5,4 +5,5 @@ sqlalchemy
 sure
 beautifulsoup4
 nose
+requests
 git+git://github.com/amueller/word_cloud.git
