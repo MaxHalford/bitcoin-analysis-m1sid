@@ -10,12 +10,9 @@ install:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  # Useful for debugging any issues with conda
+  - conda install -c conda conda-env
   - conda info -a
-  # Replace dep1 dep2 ... with your dependencies
-  #- conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION dep1 dep2 ...
+  - conda create -n test-environment
   - source activate test-environment
   - pip install -r requirements.txt
-  - python setup.py install
 script: nosetests test_functions.py
