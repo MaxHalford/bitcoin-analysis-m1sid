@@ -1,11 +1,13 @@
 import unittest
 import sure
 import random
-
+import matplotlib
 import pandas as pd
 import numpy as np
 from tweet_analysis import tweet_time
 from datawarehouse import get_data
+
+matplotlib.use('Agg')
 
 datasets = ['common_daily', 'common_weekly']
 dataframe = pd.read_csv('data/{}.csv'.format(random.choice(datasets)))

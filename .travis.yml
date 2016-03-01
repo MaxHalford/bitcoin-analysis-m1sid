@@ -12,7 +12,7 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda install -c conda conda-env
   - conda info -a
-  - conda create -n test-environment python=3 scipy matplotlib
+  - conda create -n test-environment python=3 scipy
   - source activate test-environment
   - pip install -r requirements.txt
 script: nosetests test_functions.py
