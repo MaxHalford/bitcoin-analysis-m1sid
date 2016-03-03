@@ -15,8 +15,5 @@ install:
   - conda create -n test-environment python=3 scipy
   - source activate test-environment
   - pip install -r requirements.txt
-  - pip install coveralls
 script:
-  coverage run nosetests test_functions.py
-after_success:
-  coveralls
+  nosetests test_functions.py
