@@ -2,6 +2,12 @@ from bs4 import BeautifulSoup
 import re
 import pandas as pd
 import os.path
+import htmlmin
+
+
+def minify_html(content):
+    minified = htmlmin.minify(content, remove_empty_space=True)
+    return minified
 
 
 def existing_path(filepath):
@@ -21,7 +27,7 @@ def get_usernames(tweet_type, year):
     fname = "../data/tweets/{0}/{1}.html".format(tweet_type, year)
     if existing_path(fname):
         with open(fname, 'r') as fichier:
-            html = fichier.read()
+            html = minify_html(fichier.read())
         soup = BeautifulSoup(html, 'html.parser')
         divs = soup.findAll(
             'span', attrs={"class": "username js-action-profile-name"})
@@ -37,7 +43,7 @@ def get_fullnames(tweet_type, year):
     fname = "../data/tweets/{0}/{1}.html".format(tweet_type, year)
     if existing_path(fname):
         with open(fname, 'r') as fichier:
-            html = fichier.read()
+            html = minify_html(fichier.read())
         soup = BeautifulSoup(html, 'html.parser')
         divs = soup.findAll(
             'strong', attrs={"class": "fullname"})
@@ -53,7 +59,7 @@ def get_tweets(tweet_type, year):
     fname = "../data/tweets/{0}/{1}.html".format(tweet_type, year)
     if existing_path(fname):
         with open(fname, 'r') as fichier:
-            html = fichier.read()
+            html = minify_html(fichier.read())
         soup = BeautifulSoup(html, 'html.parser')
         divs = soup.findAll('p', attrs={"class": "TweetTextSize"})
         tweets = [div.get_text() for div in divs]
@@ -68,7 +74,7 @@ def get_retweets(tweet_type, year):
     fname = "../data/tweets/{0}/{1}.html".format(tweet_type, year)
     if existing_path(fname):
         with open(fname, 'r') as fichier:
-            html = fichier.read()
+            html = minify_html(fichier.read())
         soup = BeautifulSoup(html, 'html.parser')
         divs = soup.findAll(
             'span', attrs={"class": "ProfileTweet-action--retweet"})
@@ -86,7 +92,7 @@ def get_likes(tweet_type, year):
     fname = "../data/tweets/{0}/{1}.html".format(tweet_type, year)
     if existing_path(fname):
         with open(fname, 'r') as fichier:
-            html = fichier.read()
+            html = minify_html(fichier.read())
         soup = BeautifulSoup(html, 'html.parser')
         divs = soup.findAll(
             'span', attrs={"class": "ProfileTweet-action--favorite"})
@@ -104,7 +110,7 @@ def get_timestamps(tweet_type, year):
     fname = "../data/tweets/{0}/{1}.html".format(tweet_type, year)
     if existing_path(fname):
         with open(fname, 'r') as fichier:
-            html = fichier.read()
+            html = minify_html(fichier.read())
         soup = BeautifulSoup(html, 'html.parser')
         divs = soup.findAll(
             'span', attrs={"class": "_timestamp"})
@@ -126,34 +132,42 @@ def empty_list(items):
 
 
 def compute_df(tweet_type, year, save=False):
-    usernames = get_usernames(tweet_type, year)
-    fullnames = get_fullnames(tweet_type, year)
-    tweets = get_tweets(tweet_type, year)
-    retweets = get_retweets(tweet_type, year)
-    likes = get_likes(tweet_type, year)
-    timestamps = get_timestamps(tweet_type, year)
-    array_length = [len(usernames), len(fullnames), len(
-        tweets), len(retweets), len(likes), len(timestamps)]
 
-    if not items_equal(array_length):
-        return 'Les listes récupérées ne sont pas de la même taille'
-    elif empty_list(array_length):
-        return 'Les listes sont vides'
-    else:
-        d = {'username': usernames,
-             'fullname': fullnames,
-             'tweet': tweets,
-             'retweets': retweets,
-             'likes': likes,
-             'timestamp': timestamps}
-
-        df = pd.DataFrame(d)
-
-        if save:
-            df.to_csv(
-                '../data/dataframes/{0}_{1}.csv'.format(tweet_type, year))
-
+    fname = '../data/dataframes/{0}_{1}.csv'.format(tweet_type, year)
+    # Si le dataframe existe déjà alors on lit et on le renvoie
+    if existing_path(fname):
+        df = pd.read_csv(fname)
+        print(len(df.index))
         return df
+    # Sinon on récolte lance le processus de collecte des données
+    else:
+        usernames = get_usernames(tweet_type, year)
+        fullnames = get_fullnames(tweet_type, year)
+        tweets = get_tweets(tweet_type, year)
+        retweets = get_retweets(tweet_type, year)
+        likes = get_likes(tweet_type, year)
+        timestamps = get_timestamps(tweet_type, year)
+        array_length = [len(usernames), len(fullnames), len(
+            tweets), len(retweets), len(likes), len(timestamps)]
+
+        if not items_equal(array_length):
+            return 'Les listes récupérées ne sont pas de la même taille'
+        elif empty_list(array_length):
+            return 'Les listes sont vides'
+        else:
+            d = {'username': usernames,
+                 'fullname': fullnames,
+                 'tweet': tweets,
+                 'retweets': retweets,
+                 'likes': likes,
+                 'timestamp': timestamps}
+
+            df = pd.DataFrame(d)
+            if save:
+                df.to_csv(
+                    '../data/dataframes/{0}_{1}.csv'.format(tweet_type, year))
+            print(len(df.index))
+            return df
 
 
 def compute_dataframes(tweet_type, annees, save=False):
@@ -168,4 +182,5 @@ def compute_dataframes(tweet_type, annees, save=False):
     return df
 
 if __name__ == '__main__':
-    print(compute_dataframes('negatifs', [2009, 2011]))
+    print(compute_dataframes('positifs', range(2010, 2016), save=True))
+    print(compute_dataframes('negatifs', range(2010, 2016), save=True))

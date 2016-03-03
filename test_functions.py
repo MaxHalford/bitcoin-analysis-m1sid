@@ -1,13 +1,10 @@
 import unittest
 import sure
 import random
-import matplotlib
 import pandas as pd
 import numpy as np
 from tweet_analysis import tweet_time
 from datawarehouse import get_data
-
-matplotlib.use('Agg')
 
 datasets = ['common_daily', 'common_weekly']
 dataframe = pd.read_csv('data/{}.csv'.format(random.choice(datasets)))
@@ -36,7 +33,6 @@ class TestsFonctionnels(unittest.TestCase):
 
     def test_corr_ratio_cours(self):
         corr = tweet_time.corr_ratio_cours(dataframe, scale=1)
-        print(corr)
         (corr).should.be.within(0, 1)
 
     def test_corr_cours_ratio(self):
@@ -58,6 +54,5 @@ class TestsFonctionnels(unittest.TestCase):
     def test_existing_path(self):
         real = get_data.existing_path(realPath)
         (real).should.be.equal(True)
-        print(wrongPath)
         wrong = get_data.existing_path(wrongPath)
         (wrong).should.be.equal(False)
