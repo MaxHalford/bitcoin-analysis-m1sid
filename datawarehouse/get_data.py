@@ -137,7 +137,7 @@ def compute_df(tweet_type, year, save=False):
     # Si le dataframe existe déjà alors on lit et on le renvoie
     if existing_path(fname):
         df = pd.read_csv(fname)
-        print(len(df.index))
+        df['sentiment'] = tweet_type
         return df
     # Sinon on récolte lance le processus de collecte des données
     else:
@@ -163,24 +163,27 @@ def compute_df(tweet_type, year, save=False):
                  'timestamp': timestamps}
 
             df = pd.DataFrame(d)
+
+            df['sentiment'] = tweet_type
+
             if save:
                 df.to_csv(
                     '../data/dataframes/{0}_{1}.csv'.format(tweet_type, year))
-            print(len(df.index))
             return df
 
 
 def compute_dataframes(tweet_type, annees, save=False):
     dataframes = [compute_df(tweet_type, annee, save=True) for annee in annees]
     df = dataframes[0].append(dataframes[1:])
-    df = df.reset_index(drop=True)
+    df = df.drop(df.columns[0], axis=1)
 
     if save:
         df.to_csv(
             '../data/dataframes/{}.csv'.format(tweet_type))
-
     return df
 
 if __name__ == '__main__':
-    print(compute_dataframes('positifs', range(2010, 2016), save=True))
-    print(compute_dataframes('negatifs', range(2010, 2016), save=True))
+    pos = compute_dataframes('positifs', range(2010, 2016), save=True)
+    neg = compute_dataframes('negatifs', range(2010, 2016), save=True)
+    global_tweets = pos.append(neg)
+    global_tweets.to_csv('../data/dataframes/allTweets.csv')

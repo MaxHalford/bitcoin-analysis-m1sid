@@ -19,9 +19,28 @@ session.commit()
 # A finir...
 
 # Prix de l'électricité
-electricite = pd.read_csv('../data/electricite.csv')
-electricite.index = pd.to_datetime(electricite.periode, format='%Y_%m')
-electricite.drop('periode', axis=1, inplace=True)
+electricite = pd.read_csv('data/electricite.csv')
+electricite['periode'] = pd.to_datetime(electricite.periode, format='%Y_%m')
+electricite.apply(lambda x: session.add(Electricite(date=x['periode'],
+                                                    prix=x['prix'],
+                                                    pays='USA')), axis=1)
 
+session.commit()
 # Machines
-machines = pd.read_csv('../data/machines.csv', index_col='nom')
+machines = pd.read_csv('data/machines.csv', index_col='nom')
+machines['nom']=machines.index
+machines.apply(lambda x: session.add(Machine(nom=x['nom'],
+                                             hashrate=x['mhash/s'],
+                                            consommation=x['watts'],
+                                            cout=x['prix/$'])), axis=1)
+
+session.commit()
+
+#Bitcoin
+bitcoins = Quandl.get('BCHAIN/MKPRU', authtoken='ri21BpjKtw3SVkCYWpKw',
+                         collapse='daily')
+bitcoins['date'] = bitcoins.index
+bitcoins.apply(lambda x: session.add(Bitcoin(date=x['date'],
+                                             valeur=x['Value'])), axis=1)
+session.commit()
+                         
