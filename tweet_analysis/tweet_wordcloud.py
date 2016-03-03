@@ -1,4 +1,6 @@
 from wordcloud import WordCloud, STOPWORDS
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 from scipy.misc import imread
 import os.path

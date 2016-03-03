@@ -1,4 +1,6 @@
 import Quandl
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn
 from datetime import datetime
