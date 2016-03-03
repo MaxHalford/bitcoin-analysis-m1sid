@@ -6,4 +6,5 @@ sure
 beautifulsoup4
 nose
 requests
+htmlmin
 git+git://github.com/amueller/word_cloud.git
