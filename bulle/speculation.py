@@ -1,19 +1,19 @@
 import Quandl
 import pandas as pd
+import seaborn as sns
 
-# Cours du bitcoin
-cours = Quandl.get('BCHAIN/MKPRU', authtoken='ri21BpjKtw3SVkCYWpKw', collapse='daily')
-# Nombre de transactions
-transactions = Quandl.get('BCHAIN/NTRAN', authtoken='ri21BpjKtw3SVkCYWpKw', collapse='daily')
-# Nombre de bitcoins transférés
-volume = Quandl.get('BCHAIN/ETRAV', authtoken='ri21BpjKtw3SVkCYWpKw', collapse='daily')
-
-
-# Jointure des trois tableaux
 speculation = pd.DataFrame()
-speculation['cours'] = cours['Value']
-speculation['transactions'] = transactions['Value']
-speculation['volume'] = volume['Value']
 
-spearman = speculation['cours'].corr(speculation['transactions'], method='spearman')
-print(spearman)
+codes = {
+    'Cours': 'BCHAIN/MKPRU',
+    'Transactions': 'BCHAIN/NTRAN',
+    'Volume en dollars': 'BCHAIN/ETRVU',
+    'Volume en bitcoins': 'BCHAIN/ETRAV'
+}
+
+for indicateur, code in codes.items():
+    df = Quandl.get(code, authtoken='ri21BpjKtw3SVkCYWpKw', collapse='daily')
+    speculation[indicateur] = df['Value']
+
+corr = speculation.corr(method='spearman')
+sns.heatmap(corr)
