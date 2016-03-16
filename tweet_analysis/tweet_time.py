@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib as mpl
-mpl.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib import dates as mdates
 import Quandl
@@ -52,7 +50,7 @@ common.columns = keys
 # Affichage des tweets positifs vs. négatifs
 common.loc[:, ['positif', 'negatif']].plot(
     title="Évolution de la nature des tweets liés à \"bitcoin\" de 2009 à aujourd'hui")
-# plt.show()
+plt.show()
 
 
 def compute_ratio(df):
@@ -67,13 +65,15 @@ common = compute_ratio(common)
 common.to_csv('data/common_daily.csv')
 
 # Visualisation du ratio
-common.loc[:, ['ratio']].plot(kind='line',
-                              title="Évolution du ratio de tweets positifs liés à \"bitcoin\" de 2009 à aujourd'hui")
-# plt.show()
+df_ratio = common[common['ratio'] > 0]['ratio']
+df_ratio.dropna().plot(kind='line',
+                       title="Évolution du ratio de tweets positifs liés à \"bitcoin\" de 2009 à aujourd'hui")
 
-common.loc[:, ['cours']].plot(kind='line',
-                              title="Cours")
-# plt.show()
+common['cours'].plot(kind='line',
+                     title='Cours',
+                     secondary_y=True, style='g')
+
+plt.show()
 
 # Cours du bitcoin suivant le ratio
 common.plot(secondary_y=['positif', 'negatif'],
