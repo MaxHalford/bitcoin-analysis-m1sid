@@ -3,4 +3,3 @@ tweets/*
 .cache/
 __pycache__
 tweet_analysis/wordclouds/*
-data/tweets/positifs
