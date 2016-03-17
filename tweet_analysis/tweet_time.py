@@ -1,11 +1,10 @@
 import pandas as pd
 import numpy as np
-import matplotlib as mpl
-mpl.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib import dates as mdates
 import Quandl
 import seaborn
+import seaborn as sns
 
 # Récupération des tweets positifs
 dfp = pd.read_csv('data/timestamps/positifs.txt',
@@ -49,9 +48,9 @@ common['cours'] = np.round(common['cours'], 2)
 # On renomme les colonnes
 common.columns = keys
 
-# Affichage des tweets positifs vs. négatifs
-common.loc[:, ['positif', 'negatif']].plot(
-    title="Évolution de la nature des tweets liés à \"bitcoin\" de 2009 à aujourd'hui")
+# # Affichage des tweets positifs vs. négatifs
+# common.loc[:, ['positif', 'negatif']].plot(
+#     title="Évolution de la nature des tweets liés à \"bitcoin\" de 2009 à aujourd'hui")
 # plt.show()
 
 
@@ -66,24 +65,30 @@ common = compute_ratio(common)
 
 common.to_csv('data/common_daily.csv')
 
-# Visualisation du ratio
-common.loc[:, ['ratio']].plot(kind='line',
-                              title="Évolution du ratio de tweets positifs liés à \"bitcoin\" de 2009 à aujourd'hui")
+# # Visualisation du ratio
+# df_ratio = common[common['ratio'] > 0]['ratio']
+# df_ratio.dropna().plot(kind='line',
+# title="Évolution du ratio de tweets positifs liés à \"bitcoin\" de 2009
+# à aujourd'hui")
+
+# df_cours = common['cours']
+
+# df_cours.dropna().plot(kind='line',
+#                        title='Cours',
+#                        secondary_y=True, style='g')
+
 # plt.show()
 
-common.loc[:, ['cours']].plot(kind='line',
-                              title="Cours")
-# plt.show()
 
-# Cours du bitcoin suivant le ratio
-common.plot(secondary_y=['positif', 'negatif'],
-            title="Évolution du bitcoin de 2009 à aujourd'hui")
-# plt.show()
+# # Cours du bitcoin suivant le ratio
+# common.plot(secondary_y=['positif', 'negatif'],
+#             title="Évolution du bitcoin de 2009 à aujourd'hui")
+# # plt.show()
 
-# On supprime les colonnes que l'on ne souhaite pas afficher.
-common.loc[:, ['ratio', 'cours']].plot(secondary_y=['ratio'],
-                                       title="Évolution du bitcoin de 2009 à aujourd'hui")
-# plt.show()
+# # On supprime les colonnes que l'on ne souhaite pas afficher.
+# common.loc[:, ['ratio', 'cours']].plot(secondary_y=['ratio'],
+#                                        title="Évolution du bitcoin de 2009 à aujourd'hui")
+# # plt.show()
 
 # Est-ce que quand le ratio tweets +/- augmente, implique que dans un
 # espace de temps variable futur que le cours du bitcoin augmente ?
@@ -133,6 +138,19 @@ common.columns = keys
 common = compute_ratio(common)
 
 common.to_csv('data/common_weekly.csv')
+
+df_hm = pd.DataFrame()
+# On effectue une période glissante de 2 semaines
+for i in range(1, 14):
+    df_hm['c+{}'.format(i)] = common.cours.shift(i)
+df_hm['ratio'] = common.ratio
+df_hm['cours'] = common.ratio
+
+print(df_hm)
+
+corr = df_hm.corr(method='spearman')
+sns.heatmap(corr, linewidths=.5, cmap='YlGnBu')
+plt.show()
 
 
 # Sens ratio-cours
