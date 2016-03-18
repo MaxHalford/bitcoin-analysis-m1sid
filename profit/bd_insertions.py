@@ -19,7 +19,7 @@ session.commit()
 # A finir...
 
 # Prix de l'électricité
-electricite = pd.read_csv('data/electricite.csv')
+electricite = pd.read_csv('../data/electricite.csv')
 electricite['periode'] = pd.to_datetime(electricite.periode, format='%Y_%m')
 electricite.apply(lambda x: session.add(Electricite(date=x['periode'],
                                                     prix=x['prix'],
@@ -27,7 +27,7 @@ electricite.apply(lambda x: session.add(Electricite(date=x['periode'],
 
 session.commit()
 # Machines
-machines = pd.read_csv('data/machines.csv', index_col='nom')
+machines = pd.read_csv('../data/machines.csv', index_col='nom')
 machines['nom']=machines.index
 machines.apply(lambda x: session.add(Machine(nom=x['nom'],
                                              hashrate=x['mhash/s'],
@@ -43,4 +43,3 @@ bitcoins['date'] = bitcoins.index
 bitcoins.apply(lambda x: session.add(Bitcoin(date=x['date'],
                                              valeur=x['Value'])), axis=1)
 session.commit()
-                         

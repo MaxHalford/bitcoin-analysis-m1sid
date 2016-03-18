@@ -11,6 +11,8 @@ codes = {
     'Volume en bitcoins': 'BCHAIN/ETRAV'
 }
 
+
+
 for indicateur, code in codes.items():
     df = Quandl.get(code, authtoken='ri21BpjKtw3SVkCYWpKw', collapse='daily')
     speculation[indicateur] = df['Value']
