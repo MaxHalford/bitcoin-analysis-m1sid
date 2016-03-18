@@ -51,8 +51,8 @@ class TestsFonctionnels(unittest.TestCase):
         notEmpty = get_data.empty_list(notEmptyList)
         (notEmpty).should.be.equal(False)
 
-    #def test_existing_path(self):
-    #    real = get_data.existing_path(realPath)
-    #    (real).should.be.equal(True)
-    #    wrong = get_data.existing_path(wrongPath)
-    #    (wrong).should.be.equal(False)
+    # def test_existing_path(self):
+    # 	real = get_data.existing_path(realPath)
+    # 	(real).should.be.equal(True)
+    # 	wrong = get_data.existing_path(wrongPath)
+    # 	(wrong).should.be.equal(False)
