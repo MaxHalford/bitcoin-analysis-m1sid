@@ -49,7 +49,7 @@ common['cours'] = np.round(common['cours'], 2)
 common.columns = keys
 
 # # Affichage des tweets positifs vs. négatifs
-#common.loc[:, ['positif', 'negatif']].plot(
+# common.loc[:, ['positif', 'negatif']].plot(
 #     title="Évolution de la nature des tweets liés à \"bitcoin\" de 2009 à aujourd'hui")
 # plt.show()
 
@@ -69,8 +69,10 @@ common.to_csv('../data/common_daily.csv')
 fig, ax = plt.subplots()
 df_ratio = common[common['ratio'] > 0]['ratio']
 df_ratio.dropna().plot(kind='line', ax=ax,
-title="Évolution du ratio de tweets positifs liés à \"bitcoin\" de 2009 à aujourd'hui")
+                       title="Évolution du ratio de tweets positifs liés à \"bitcoin\" de 2009 à aujourd'hui")
 pd.rolling_mean(df_ratio, window=14, min_periods=1).plot(ax=ax)
+
+plt.show()
 
 df_cours = common['cours']
 
