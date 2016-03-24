@@ -37,7 +37,7 @@ def get_usernames(tweet_type, year):
         usernames = [div.get_text() for div in divs]
         return usernames
     else:
-        print("{} n'exite pas.".format(fname))
+        raise ValueError("{} n'existe pas.".format(fname))
         return
 
 
@@ -54,7 +54,7 @@ def get_fullnames(tweet_type, year):
         fullnames = [div.get_text() for div in divs]
         return fullnames
     else:
-        print("{} n'exite pas.".format(fname))
+        raise ValueError("{} n'existe pas.".format(fname))
         return
 
 
@@ -70,7 +70,7 @@ def get_tweets(tweet_type, year):
         tweets = [div.get_text() for div in divs]
         return tweets
     else:
-        print("{} n'exite pas.".format(fname))
+        raise ValueError("{} n'existe pas.".format(fname))
         return
 
 
@@ -89,7 +89,7 @@ def get_retweets(tweet_type, year):
         retweets = [re.sub(r"\D", "", rt.get_text()) for rt in RT]
         return retweets
     else:
-        print("{} n'exite pas.".format(fname))
+        raise ValueError("{} n'existe pas.".format(fname))
         return
 
 
@@ -108,7 +108,7 @@ def get_likes(tweet_type, year):
         likes = [re.sub(r"\D", "", fav.get_text()) for fav in FAV]
         return likes
     else:
-        print("{} n'exite pas.".format(fname))
+        raise ValueError("{} n'existe pas.".format(fname))
         return
 
 
@@ -125,7 +125,7 @@ def get_timestamps(tweet_type, year):
         timestamps = [re.sub(r"\D", "", div['data-time-ms']) for div in divs]
         return timestamps
     else:
-        print("{} n'exite pas.".format(fname))
+        raise ValueError("{} n'existe pas.".format(fname))
         return
 
 
@@ -142,7 +142,7 @@ def empty_list(items):
 
 
 def compute_df(tweet_type, year, save=False):
-    ''' Recherche les informations nécessaires à la consitution d'un dataframe '''
+    ''' Recherche les informations nécessaires à la constitution d'un dataframe '''
     fname = '../data/dataframes/{0}_{1}.csv'.format(tweet_type, year)
     # Si le dataframe existe déjà alors on lit et on le renvoie
     if existing_path(fname):
@@ -161,9 +161,12 @@ def compute_df(tweet_type, year, save=False):
             tweets), len(retweets), len(likes), len(timestamps)]
 
         if not items_equal(array_length):
-            return 'Les listes récupérées ne sont pas de la même taille'
+            raise ValueError(
+                "Les listes récupérées ne sont pas de la même taille")
+            return
         elif empty_list(array_length):
-            return 'Les listes sont vides'
+            raise ValueError(
+                "Les listes sont vides")
         else:
             d = {'username': usernames,
                  'fullname': fullnames,
@@ -193,6 +196,8 @@ def compute_dataframes(tweet_type, annees, save=False):
             '../data/dataframes/{}.csv'.format(tweet_type))
     return df
 
+# Si le script est appelé de manière indirecte (import) alors on n'exécute
+# pas les lignes suivantes
 if __name__ == '__main__':
     pos = compute_dataframes('positifs', range(2010, 2016), save=True)
     neg = compute_dataframes('negatifs', range(2010, 2016), save=True)

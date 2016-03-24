@@ -19,7 +19,8 @@ def read_year_tweets(tweet_type, year):
             content = content_file.read()
         return content
     else:
-        return "Pas de tweets {0} - {1} trouvés".format(tweet_type, year)
+        raise ValueError(
+            "Pas de tweets {0} - {1} trouvés".format(tweet_type, year))
 
 
 def clean_tweets(tweets):
