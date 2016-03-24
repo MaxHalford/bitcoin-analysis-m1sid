@@ -7,7 +7,7 @@ import seaborn
 import seaborn as sns
 
 # Récupération des tweets positifs
-dfp = pd.read_csv('data/timestamps/positifs.txt',
+dfp = pd.read_csv('../data/timestamps/positifs.txt',
                   header=None, index_col=0)
 dfp['value'] = 1
 # Conversion de l'index en datetime
@@ -22,7 +22,7 @@ dfp.index = pd.to_datetime(dfp.index, unit='ms')
 
 
 # Récupération des tweets négatifs
-dfn = pd.read_csv('data/timestamps/negatifs.txt',
+dfn = pd.read_csv('../data/timestamps/negatifs.txt',
                   header=None, index_col=0)
 dfn['value'] = 1
 # Conversion de l'index en datetime
@@ -49,7 +49,7 @@ common['cours'] = np.round(common['cours'], 2)
 common.columns = keys
 
 # # Affichage des tweets positifs vs. négatifs
-# common.loc[:, ['positif', 'negatif']].plot(
+#common.loc[:, ['positif', 'negatif']].plot(
 #     title="Évolution de la nature des tweets liés à \"bitcoin\" de 2009 à aujourd'hui")
 # plt.show()
 
@@ -63,15 +63,16 @@ def compute_ratio(df):
 
 common = compute_ratio(common)
 
-common.to_csv('data/common_daily.csv')
+common.to_csv('../data/common_daily.csv')
 
 # # Visualisation du ratio
-# df_ratio = common[common['ratio'] > 0]['ratio']
-# df_ratio.dropna().plot(kind='line',
-# title="Évolution du ratio de tweets positifs liés à \"bitcoin\" de 2009
-# à aujourd'hui")
+fig, ax = plt.subplots()
+df_ratio = common[common['ratio'] > 0]['ratio']
+df_ratio.dropna().plot(kind='line', ax=ax,
+title="Évolution du ratio de tweets positifs liés à \"bitcoin\" de 2009 à aujourd'hui")
+pd.rolling_mean(df_ratio, window=14, min_periods=1).plot(ax=ax)
 
-# df_cours = common['cours']
+df_cours = common['cours']
 
 # df_cours.dropna().plot(kind='line',
 #                        title='Cours',
@@ -137,7 +138,7 @@ common.columns = keys
 # Création d'un ratio pour les tweets, positifs/total
 common = compute_ratio(common)
 
-common.to_csv('data/common_weekly.csv')
+common.to_csv('../data/common_weekly.csv')
 
 df_hm = pd.DataFrame()
 # On effectue une période glissante de 2 semaines
