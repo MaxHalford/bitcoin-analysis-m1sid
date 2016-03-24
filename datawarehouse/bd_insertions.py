@@ -40,6 +40,7 @@ punctuation = ['!', '?', ';', ':', ',', '.']
 
 def rm_punctuation(s):
     cleaned = "".join(l for l in s if l not in punctuation)
+    print("Ligne insérée.")
     return cleaned
 
 

@@ -150,13 +150,13 @@ print(df_hm)
 
 corr = df_hm.corr(method='spearman')
 sns.heatmap(corr, linewidths=.5, cmap='YlGnBu')
-plt.show()
+# plt.show()
 
 
 # Sens ratio-cours
 
-# pd.Series([corr_ratio_cours(common, scale=i)
-#            for i in range(14)]).plot(title="ratio => cours (par semaine)", ylim=(0, 1))
+pd.Series([corr_ratio_cours(common, scale=i)
+           for i in range(14)]).plot(title="ratio => cours (par semaine)", ylim=(0, 1))
 # plt.show()
 
 
